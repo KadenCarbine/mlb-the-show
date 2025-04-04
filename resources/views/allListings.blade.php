@@ -3,23 +3,13 @@
         <p style="color: red;">{{ $error }}</p>
     @else
     <div class="grid grid-cols-5 gap-4">
-            @foreach($data['listings'] as $item)
+            @foreach($collection as $item)
                 <div class="max-w-xs rounded-lg overflow-hidden shadow-lg">
                     <img class="w-full" src="{{ $item['item']['baked_img'] }}" alt="MLB The Show 25 Card {{ $item['listing_name'] }} Series: {{ $item['item']['series'] }}">
                     <div class="px-2 py-4">
                         <div class="font-bold text-xl mb-2 flex justify-between">
                             <div>{{ $item['listing_name'] }} </div>
-                            @php
-                                $ovr = $item['item']['ovr'];
-                                $colorClass = match (true) {
-                                    $ovr > 84 => 'text-blue-400',
-                                    $ovr > 79 => 'text-yellow-400',
-                                    $ovr > 74 => 'text-slate-400',
-                                    $ovr > 64 => 'text-yellow-800',
-                                    default   => 'text-black-500',
-                                };
-                            @endphp
-                        <div class="pr-2 {{ $colorClass }}">{{ $ovr }}</div>
+                            <div class="pr-2 {{ $item['item']['color'] }}">{{ $item['item']['ovr'] }}</div>
                         </div>
                         <p class="text-gray-700 text-base">${{ number_format($item['best_sell_price']) }}</p>
                         <p class="text-gray-700 text-base">${{ number_format($item['best_buy_price']) }}</p>
