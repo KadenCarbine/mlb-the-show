@@ -13,7 +13,10 @@
                         </div>
                         <p class="text-gray-700 text-base">${{ number_format($item['best_sell_price']) }}</p>
                         <p class="text-gray-700 text-base">${{ number_format($item['best_buy_price']) }}</p>
-                        <p class="text-gray-700 text-base"> Difference ${{ number_format($item['best_sell_price'] - $item['best_buy_price']) }}</p>
+                        <div class="flex justify-between">
+                            <span class="text-gray-700 text-base"> Difference ${{ number_format($item['best_sell_price'] - $item['best_buy_price']) }}</span>
+                            <span class="text-gray-700 text-base {{ $item['flip'] }}">{{ $item['percent'] }}%</span>
+                        </div>
                     </div>
                     {{-- <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span> --}}
                 </div>

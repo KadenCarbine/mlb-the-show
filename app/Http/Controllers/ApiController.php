@@ -21,10 +21,9 @@ class ApiController extends Controller
         }
         $data = $response->json();
         $perPage = $data['per_page'];
-        $totalPages = $data['total_pages'];
-        $totalitems = $perPage * $totalPages;
+        $totalitems = $perPage * $data['total_pages'];
         $collection = collect($data['listings']);
-
+        // This takes the rarity of the card and adds a new value to the array to display the rarity color on the ovr
         $collection = $collection->map(function($item) {
             $rarity = $item['item']['rarity'];
             if($rarity == 'Diamond') {
@@ -40,6 +39,34 @@ class ApiController extends Controller
             } else {$item['item']['color'] = '';}
             return $item;
         });
+        // Adding a percentage difference between the buy and sell price. 
+        $collection = $collection->map(function($item) {
+            if($item['best_buy_price'] == 0) {
+                return $item['percent'] = 0;
+            }
+            $percentDifference = (($item['best_sell_price'] - $item['best_buy_price']) / abs($item['best_buy_price'])) * 100;
+            $percentDifference = round($percentDifference, 2);
+            $item['percent'] = $percentDifference;
+            return $item;
+        });
+        // Adding a flip value to show green / red if the percent is greater than 20 % difference. 
+        $collection = $collection->map(function($item) {
+            if($item['percent'] == 'N/A') {
+                $item['flip'] = 'text-red-500';
+                return $item;
+            }
+            if($item['percent'] > 25) {
+                $item['flip'] = 'text-green-500';
+                return $item;
+            }
+            if($item['percent'] > 17.5) {
+                $item['flip'] = 'text-yellow-500';
+                return $item;
+            }
+            $item['flip'] = 'text-red-500';
+            return $item;
+        });
+
         $pagination = new LengthAwarePaginator(
             $collection,
             $totalitems,
@@ -49,7 +76,7 @@ class ApiController extends Controller
         );
         return view('allListings', [
             'collection' => $collection,
-            'pagination' => $pagination
+            'pagination' => $pagination,
         ]);
     }
 }
