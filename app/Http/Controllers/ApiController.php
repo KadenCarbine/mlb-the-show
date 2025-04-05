@@ -42,7 +42,8 @@ class ApiController extends Controller
         // Adding a percentage difference between the buy and sell price. 
         $collection = $collection->map(function($item) {
             if($item['best_buy_price'] == 0) {
-                return $item['percent'] = 0;
+                $item['percent'] = 0;
+                return $item;
             }
             $percentDifference = (($item['best_sell_price'] - $item['best_buy_price']) / abs($item['best_buy_price'])) * 100;
             $percentDifference = round($percentDifference, 2);
@@ -51,7 +52,7 @@ class ApiController extends Controller
         });
         // Adding a flip value to show green / red if the percent is greater than 20 % difference. 
         $collection = $collection->map(function($item) {
-            if($item['percent'] == 'N/A') {
+            if($item['percent'] == 0) {
                 $item['flip'] = 'text-red-500';
                 return $item;
             }
