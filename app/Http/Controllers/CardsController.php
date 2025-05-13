@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\CardService;
 use Illuminate\Http\Request;
+use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
 
 class CardsController
 {
@@ -40,8 +41,15 @@ class CardsController
      */
     public function show(string $id, CardService $cardService)
     {   
-        $card = ($cardService->getCard($id));
-        return view('cards.show', $card);
+        $card = $cardService->getCard($id);
+        $chart = $cardService->getChart($id);
+
+
+        return view('cards.show', [
+            'chart' => $chart['chart'],
+            'card' => $card,
+            'prices' => $chart['prices']
+        ]);
     }
 
     /**
