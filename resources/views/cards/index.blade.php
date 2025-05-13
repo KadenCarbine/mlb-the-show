@@ -4,6 +4,7 @@
     @else
     <div class="grid grid-cols-5 gap-4">
             @foreach($collection as $item)
+            <a href="/cards/{{ $item['item']['uuid'] }}">
                 <div class="max-w-xs rounded-lg overflow-hidden shadow-lg">
                     <img class="w-full" src="{{ $item['item']['baked_img'] }}" alt="MLB The Show 25 Card {{ $item['listing_name'] }} Series: {{ $item['item']['series'] }}">
                     <div class="px-2 py-4">
@@ -20,6 +21,7 @@
                     </div>
                     {{-- <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span> --}}
                 </div>
+            </a>
             @endforeach
             {{ $paginator->links() }}      
         @endif
