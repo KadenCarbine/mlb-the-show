@@ -38,9 +38,10 @@ class CardsController
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
+    public function show(string $id, CardService $cardService)
+    {   
+        $card = ($cardService->getCard($id));
+        return view('cards.show', $card);
     }
 
     /**

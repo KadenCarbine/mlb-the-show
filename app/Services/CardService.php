@@ -13,7 +13,8 @@ class CardService
     {
         //
     }
-    public function getCards() {
+    public function getCards() 
+    {
         $currentPage = $this->request->query('page');
         $perPage = 25;
         $response = Http::get('https://mlb25.theshow.com/apis/listings.json', [
@@ -28,5 +29,15 @@ class CardService
             'collection' => $collection,
             'paginator' => $paginator
         ];
+    }
+
+    public function getCard($id)
+    {
+        $response = Http::get('https://mlb25.theshow.com/apis/listing.json', [
+            'uuid' => $id
+        ]);
+        $collection = $response->collect()->all();
+
+        return ['collection' => $collection];
     }
 }
