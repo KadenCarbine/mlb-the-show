@@ -48,7 +48,8 @@ class CardsController
         return view('cards.show', [
             'chart' => $chart['chart'],
             'card' => $card,
-            'prices' => $chart['prices']
+            'prices' => $chart['prices'],
+            'recentlySold' => $chart['recentlySold']
         ]);
     }
 

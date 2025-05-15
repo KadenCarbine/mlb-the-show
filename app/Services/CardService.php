@@ -41,8 +41,9 @@ class CardService
         $labels = collect($collection['price_history'])->pluck('date')->toArray();
         $buy = collect($collection['price_history'])->pluck('best_buy_price')->toArray();
         $sell = collect($collection['price_history'])->pluck('best_sell_price')->toArray();
-        // $prices = collect);
         $prices = ['best_buy_price' => $collection['best_buy_price'], 'best_sell_price' => $collection['best_sell_price']];
+        $recentlySold = collect($collection['completed_orders'])->take(25)->toArray();
+
 
         $chart = Chartjs::build()
         ->name('barChartTest')
@@ -71,7 +72,7 @@ class CardService
                 ]
          ]);
 
-        return compact('chart', 'prices');
+        return compact('chart', 'prices', 'recentlySold');
     }
 
     public function getCard($id)
