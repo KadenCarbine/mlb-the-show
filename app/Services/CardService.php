@@ -10,15 +10,17 @@ use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
 
 class CardService
 {
+    protected string $baseUrl;
+
     public function __construct(public Request $request)
-    {
-        //
+    {   
+        $this->baseUrl = config('services.api.base_url');
     }
     public function getCards() 
     {
         $currentPage = $this->request->query('page');
         $perPage = 25;
-        $response = Http::get('https://mlb25.theshow.com/apis/listings.json', [
+        $response = Http::get($this->baseUrl . '/listings.json', [
             'type' => 'mlb_card',
             'page' => $currentPage
         ]);
@@ -34,7 +36,7 @@ class CardService
 
     public function getChart($id)
     {
-        $response = Http::get('https://mlb25.theshow.com/apis/listing.json', [
+        $response = Http::get($this->baseUrl . '/listing.json', [
             'uuid' => $id
         ]);
         $collection = $response->collect()->all();
@@ -77,7 +79,7 @@ class CardService
 
     public function getCard($id)
     {
-        $response = Http::get('https://mlb25.theshow.com/apis/item.json', [
+        $response = Http::get($this->baseUrl . '/item.json', [
             'uuid' => $id
         ]);
         $card = $response->collect()->all();
