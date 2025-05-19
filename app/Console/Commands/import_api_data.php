@@ -13,7 +13,7 @@ class import_api_data extends Command
      *
      * @var string
      */
-    protected $signature = 'app:import-api-data {uuid}';
+    protected $signature = 'import-api-data {uuid}';
 
     /**
      * The console command description.
@@ -25,12 +25,22 @@ class import_api_data extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle() :int
     {
+        $players = $this->allPlayers();
+        
+        foreach ($players as $playerUUID) {
+            if($this->argument('uuid') === $playerUUID) {
+                $this->error('A Player with this UUID is already in the Database');
+                return Command::FAILURE;
+            }
+        };
         $this->importData();
+        $this->info('Player Added to the Database');
+        return Command::SUCCESS;
     }
 
-    public function importData() 
+    public function importData() :void
     {
         $base_url = config('services.api.base_url');
         $response = Http::get($base_url . '/item.json', [
@@ -50,5 +60,18 @@ class import_api_data extends Command
         }
 
         $playerCard->save();
+    }
+
+    public function allPlayers() :array 
+    {
+        
+        $players = MLBCard::select('uuid')
+            ->whereNotNull('uuid')
+            ->get();
+
+        foreach($players as $player) {
+            $uuid[] = $player['uuid'];
+        }
+        return $uuid;
     }
 }
