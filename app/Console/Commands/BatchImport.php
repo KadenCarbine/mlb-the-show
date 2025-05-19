@@ -27,8 +27,8 @@ class BatchImport extends Command
      */
     public function handle()
     {
-        // Run a foreach loop around a set of uuids and run the import api command
         $data = $this->newUUIDs();
+        $this->info('Process Started...');
 
         foreach ($data as $item) {
             Artisan::call('import-api-data', [
@@ -36,6 +36,7 @@ class BatchImport extends Command
             ]);
         }
         $this->info('All Missing Players from this page were added');
+        return Command::SUCCESS;
     }
 
     public function newUUIDs(): array 
