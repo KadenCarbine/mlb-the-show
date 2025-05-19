@@ -25,7 +25,7 @@ class import_api_data extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle() :int
     {
         $players = $this->allPlayers();
         
