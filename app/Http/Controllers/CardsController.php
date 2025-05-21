@@ -13,9 +13,16 @@ class CardsController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $collection = MLBCard::paginate(25);
+        $teamFilter = $request->input('team');
+        $initialQuery = MLBCard::query();
+        $applyFilters = $initialQuery
+            ->when($teamFilter, function ($query, $teamFilter) {
+                return $query->where('team', '=', $teamFilter);
+            })
+            ->paginate(25);
+        $collection = $applyFilters;
         return view('cards.index', [
             'collection' => $collection->all(),
             'paginator' => $collection
@@ -43,7 +50,7 @@ class CardsController
      */
     public function show(string $id, CardService $cardService)
     {   
-        $card = $cardService->getCard($id);
+        $card = MLBCard::where('uuid', '=', $id)->firstOrFail();
         $chart = $cardService->getChart($id);
 
 

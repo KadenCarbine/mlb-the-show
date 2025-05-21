@@ -59,14 +59,4 @@ class CardService
 
         return compact('chart', 'prices', 'recentlySold');
     }
-
-    public function getCard($id)
-    {
-        $response = Http::get($this->baseUrl . '/item.json', [
-            'uuid' => $id
-        ]);
-        $card = $response->collect()->all();
-
-        return compact('card');
-    }
 }
