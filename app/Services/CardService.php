@@ -16,23 +16,6 @@ class CardService
     {   
         $this->baseUrl = config('services.api.base_url');
     }
-    public function getCards() 
-    {
-        $currentPage = $this->request->query('page');
-        $perPage = 25;
-        $response = Http::get($this->baseUrl . '/listings.json', [
-            'type' => 'mlb_card',
-            'page' => $currentPage
-        ]);
-        $collection = $response->collect('listings')->all();
-        $total = $perPage * $response->json('total_pages');
-
-        $paginator = new LengthAwarePaginator($collection, $total, $perPage, null, ['path' => '/cards']);
-        return [
-            'collection' => $collection,
-            'paginator' => $paginator
-        ];
-    }
 
     public function getChart($id)
     {

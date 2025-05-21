@@ -5,18 +5,20 @@ namespace App\Http\Controllers;
 use App\Services\CardService;
 use Illuminate\Http\Request;
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
+use App\Models\MLBCard;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CardsController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(CardService $cardService)
+    public function index()
     {
-        $cards = $cardService->getCards();
+        $collection = MLBCard::paginate(25);
         return view('cards.index', [
-            'collection' => $cards['collection'], 
-            'paginator'=> $cards['paginator']
+            'collection' => $collection->all(),
+            'paginator' => $collection
         ]);
     }
 
