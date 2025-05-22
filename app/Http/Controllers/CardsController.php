@@ -5,18 +5,27 @@ namespace App\Http\Controllers;
 use App\Services\CardService;
 use Illuminate\Http\Request;
 use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
+use App\Models\MLBCard;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CardsController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(CardService $cardService)
+    public function index(Request $request)
     {
-        $cards = $cardService->getCards();
+        $teamFilter = $request->input('team');
+        $initialQuery = MLBCard::query();
+        $applyFilters = $initialQuery
+            ->when($teamFilter, function ($query, $teamFilter) {
+                return $query->where('team', '=', $teamFilter);
+            })
+            ->paginate(25);
+        $collection = $applyFilters;
         return view('cards.index', [
-            'collection' => $cards['collection'], 
-            'paginator'=> $cards['paginator']
+            'collection' => $collection->all(),
+            'paginator' => $collection
         ]);
     }
 
@@ -41,7 +50,7 @@ class CardsController
      */
     public function show(string $id, CardService $cardService)
     {   
-        $card = $cardService->getCard($id);
+        $card = MLBCard::where('uuid', '=', $id)->firstOrFail();
         $chart = $cardService->getChart($id);
 
 
